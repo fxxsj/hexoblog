@@ -358,14 +358,14 @@
                 
                 <div class="info-break-policy">
                     <i class="far fa-file-word fa-fw"></i>文章字数:&nbsp;&nbsp;
-                    1k
+                    1.1k
                 </div>
                 
 
                 
                 <div class="info-break-policy">
                     <i class="far fa-clock fa-fw"></i>阅读时长:&nbsp;&nbsp;
-                    3 分
+                    4 分
                 </div>
                 
 
@@ -383,22 +383,35 @@
 
         <div class="card-content article-card-content">
             <div id="articleContent">
-                <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>经常我们有一个场景：需要在公司或者家庭多个电脑完成Hexo的博客撰写和发布工作。这就涉及到Hexo多电脑的同步问题。</p>
-<h3 id="过时方案"><a href="#过时方案" class="headerlink" title="过时方案"></a>过时方案</h3><p>网上的方案基本上都是多分支方案。也即，在同一个仓库创建两个分支：</p>
-<p> 1.Hexo分支 – 用来保存所有Hexo的源文件<br> 2.master分支 – 用来保存Hexo生成的博客文件</p>
-<p>在创建GitHub Pages或者Coding Pages时，以master分支为pages分支。<br>Hexo的deploy指向master分支部署pages，git的管理指向Hexo分支。</p>
+                <h2 id="前言">前言</h2>
+<p>经常我们有一个场景：需要在公司或者家庭多个电脑完成Hexo的博客撰写和发布工作。这就涉及到Hexo多电脑的同步问题。</p>
+<h3 id="过时方案">过时方案</h3>
+<p>网上的方案基本上都是多分支方案。也即，在同一个仓库创建两个分支：</p>
+<p>1.Hexo分支 – 用来保存所有Hexo的源文件<br>
+2.master分支 – 用来保存Hexo生成的博客文件</p>
+<p>在创建GitHub Pages或者Coding Pages时，以master分支为pages分支。<br>
+Hexo的deploy指向master分支部署pages，git的管理指向Hexo分支。</p>
 <p>但是这里有一个巨大的问题，就是多分支的方案一定是让完整的Hexo源文件暴露在公开的仓库了。这对一些Hexo博客采用的leancloud阅读次数管理、多说评论等服务的私有secret key也暴露在公开仓库分支了。如果对这些配置的_config.yml进行单独管理的话，又不能在另一台电脑直接git pull同步，非常的麻烦。</p>
-<h3 id="最佳办法"><a href="#最佳办法" class="headerlink" title="最佳办法"></a>最佳办法</h3><p>所以Hexo最完美的多电脑同步方法是，创建两个仓库：</p>
-<p> 1。Hexo私有仓库 – 用来保存所有Hexo的源文件<br> 2.master公开仓库 – 用来保存Hexo生成的博客文件</p>
+<h3 id="最佳办法">最佳办法</h3>
+<p>所以Hexo最完美的多电脑同步方法是，创建两个仓库：</p>
+<p>1。Hexo私有仓库 – 用来保存所有Hexo的源文件<br>
+2.master公开仓库 – 用来保存Hexo生成的博客文件</p>
 <p>下面来具体讲讲实现方法。</p>
-<h3 id="基础假设"><a href="#基础假设" class="headerlink" title="基础假设"></a>基础假设</h3><p>这里假设读者已经建立起了Hexo的博客系统了，实现了比方说：</p>
-<p>1.利用hexo d 直接deploy Hexo博客<br>2.实现了Hexo的GitHub和Coding国外和国内的同时发布<br>3.自行定义了例如next的第三方主题</p>
+<h3 id="基础假设">基础假设</h3>
+<p>这里假设读者已经建立起了Hexo的博客系统了，实现了比方说：</p>
+<p>1.利用hexo d 直接deploy Hexo博客<br>
+2.实现了Hexo的GitHub和Coding国外和国内的同时发布<br>
+3.自行定义了例如next的第三方主题</p>
 <p>Let’go!</p>
-<h2 id="1-创建私有仓库"><a href="#1-创建私有仓库" class="headerlink" title="1.创建私有仓库"></a>1.创建私有仓库</h2><p>注册一个github账号，然后创建一个私有项目，名称为 <code>myHexo</code></p>
-<h2 id="2-删除第三方git配置"><a href="#2-删除第三方git配置" class="headerlink" title="2.删除第三方git配置"></a>2.删除第三方git配置</h2><p>进入你现有的Hexo文件夹，删除第三方主题的git配置，如对next主题</p>
+<h2 id="1-创建私有仓库">1.创建私有仓库</h2>
+<p>注册一个github账号，然后创建一个私有项目，名称为 <code>myHexo</code></p>
+<h2 id="2-删除第三方git配置">2.删除第三方git配置</h2>
+<p>进入你现有的Hexo文件夹，删除第三方主题的git配置，如对next主题</p>
 <pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">rm -rf .&#x2F;themes&#x2F;next&#x2F;.git&#x2F;<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<h2 id="3-建立本地的git仓库"><a href="#3-建立本地的git仓库" class="headerlink" title="3.建立本地的git仓库"></a>3.建立本地的git仓库</h2><pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">git init<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-<h2 id="4-创建-gitignore文件"><a href="#4-创建-gitignore文件" class="headerlink" title="4.创建.gitignore文件"></a>4.创建.gitignore文件</h2><p>在Hexo的根目录创建一个.gitignore文件，内容为：</p>
+<h2 id="3-建立本地的git仓库">3.建立本地的git仓库</h2>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">git init<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="4-创建-gitignore文件">4.创建.gitignore文件</h2>
+<p>在Hexo的根目录创建一个.gitignore文件，内容为：</p>
 <pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">.DS_Store
 Thumbs.db
 db.json
@@ -406,30 +419,39 @@ db.json
 node_modules&#x2F;
 public&#x2F;
 .deploy*&#x2F;<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span><span></span><span></span><span></span></span></code></pre>
-<h2 id="5-push到私有仓库"><a href="#5-push到私有仓库" class="headerlink" title="5.push到私有仓库"></a>5.push到私有仓库</h2><pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">git remote add origin git@github.com:&lt;Github账号名称&gt;&#x2F;myHexo.github.git
+<h2 id="5-push到私有仓库">5.push到私有仓库</h2>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">git remote add origin git@github.com:&lt;Github账号名称&gt;&#x2F;myHexo.github.git
 git add .
 git commit -m &quot;my first private hexo&quot;
 git push -u origin master<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span><span></span><span></span></span></code></pre>
 <p>至此，就完成了本地Hexo源码的全备份.</p>
-<h2 id="在另一台电脑进行Hexo写作"><a href="#在另一台电脑进行Hexo写作" class="headerlink" title="在另一台电脑进行Hexo写作"></a>在另一台电脑进行Hexo写作</h2><p>上面已经完成了Hexo的全备份，那么如果在另一台电脑进行Hexo编辑呢。<br>当然首先你也要完成node/npm/hexo/git等环境的搭建和配置。</p>
-<h3 id="1-Hexo拉取"><a href="#1-Hexo拉取" class="headerlink" title="1.Hexo拉取"></a>1.Hexo拉取</h3><pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">git clone git@github.com:&lt;Github账号名称&gt;&#x2F;myHexo.github.git<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
+<h2 id="在另一台电脑进行Hexo写作">在另一台电脑进行Hexo写作</h2>
+<p>上面已经完成了Hexo的全备份，那么如果在另一台电脑进行Hexo编辑呢。<br>
+当然首先你也要完成node/npm/hexo/git等环境的搭建和配置。</p>
+<h3 id="1-Hexo拉取">1.Hexo拉取</h3>
+<pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">git clone git@github.com:&lt;Github账号名称&gt;&#x2F;myHexo.github.git<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>这样你就拥有了你的所有Hexo源文件</p>
-<h3 id="2-Hexo编写和发布"><a href="#2-Hexo编写和发布" class="headerlink" title="2.Hexo编写和发布"></a>2.Hexo编写和发布</h3><p>尽管拉取下来了，还需要建立一下Hexo的环境，这里需要格外注意的一点是：<br>千万不要用<code>hexo init</code>命令。原因是当前目录已经建立了git仓库环境, <code>hexo init</code>会覆盖到当前的git环境，重建一个新的，这样和我们的私有Hexo源码仓库脱离了联系。</p>
+<h3 id="2-Hexo编写和发布">2.Hexo编写和发布</h3>
+<p>尽管拉取下来了，还需要建立一下Hexo的环境，这里需要格外注意的一点是：<br>
+千万不要用<code>hexo init</code>命令。原因是当前目录已经建立了git仓库环境, <code>hexo init</code>会覆盖到当前的git环境，重建一个新的，这样和我们的私有Hexo源码仓库脱离了联系。</p>
 <p>正确的做法是：</p>
 <pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">npm install<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
 <p>因为package.json里面已经保存了hexo的必备资源包信息，npm install后Hexo环境就建立起来了。</p>
-<p>接下来就进行正常的编写和发布就好。<br>本地预览的命令还是：</p>
+<p>接下来就进行正常的编写和发布就好。<br>
+本地预览的命令还是：</p>
 <pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">hexo g
 hexo s<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p>Hexo的发布命令是</p>
 <pre class="line-numbers language-none"><code class="language-none">hexo d<span aria-hidden="true" class="line-numbers-rows"><span></span></span></code></pre>
-
-<h3 id="3-完成Hexo源码仓库的同步"><a href="#3-完成Hexo源码仓库的同步" class="headerlink" title="3.完成Hexo源码仓库的同步"></a>3.完成Hexo源码仓库的同步</h3><p>最后执行<code>git status</code>把更改的新文件<code>git add</code>和<code>git commit</code>，最后<code>git push</code>到私有仓库，又会完成Hexo源码仓库的同步。</p>
-<h2 id="Hexo仓库更新"><a href="#Hexo仓库更新" class="headerlink" title="Hexo仓库更新"></a>Hexo仓库更新</h2><p>下次进行Hexo仓库拉取时执行：</p>
+<h3 id="3-完成Hexo源码仓库的同步">3.完成Hexo源码仓库的同步</h3>
+<p>最后执行<code>git status</code>把更改的新文件<code>git add</code>和<code>git commit</code>，最后<code>git push</code>到私有仓库，又会完成Hexo源码仓库的同步。</p>
+<h2 id="Hexo仓库更新">Hexo仓库更新</h2>
+<p>下次进行Hexo仓库拉取时执行：</p>
 <pre class="line-numbers language-shell" data-language="shell"><code class="language-shell">git fetch --all #将git上所有文件拉取到本地
 git reset --hard origin&#x2F;master  #强制将本地内容指向刚刚同步git云端内容<span aria-hidden="true" class="line-numbers-rows"><span></span><span></span></span></code></pre>
 <p>reset 对所拉取的文件不做任何处理，此处不用 pull 是因为本地尚有许多文件，使用 pull 会有一些版本冲突，解决起来也麻烦，而本地的文件都是初始化生成的文件，较拉取的库里面的文件而言基本无用，所以直接丢弃。</p>
-<p>END<br>从此，世界是如此的美好。</p>
+<p>END<br>
+从此，世界是如此的美好。</p>
 
                 
             </div>
@@ -546,9 +568,9 @@ git reset --hard origin&#x2F;master  #强制将本地内容指向刚刚同步git
                     <div class="card-image">
                         
                         
-                        <img src="/hexoblog/medias/featureimages/17.jpg" class="responsive-img" alt="MarkDown语法">
+                        <img src="/hexoblog/medias/featureimages/5.jpg" class="responsive-img" alt="Markdown 基本语法">
                         
-                        <span class="card-title">MarkDown语法</span>
+                        <span class="card-title">Markdown 基本语法</span>
                     </div>
                 </a>
                 <div class="card-content article-content">
@@ -576,8 +598,8 @@ git reset --hard origin&#x2F;master  #强制将本地内容指向刚刚同步git
                 
                 <div class="card-action article-tags">
                     
-                    <a href="/hexoblog/tags/MarkDown/">
-                        <span class="chip bg-color">MarkDown</span>
+                    <a href="/hexoblog/tags/Markdown/">
+                        <span class="chip bg-color">Markdown</span>
                     </a>
                     
                 </div>
@@ -778,7 +800,7 @@ git reset --hard origin&#x2F;master  #强制将本地内容指向刚刚同步git
             <br>
             
                 &nbsp;<i class="fas fa-chart-area"></i>&nbsp;站点总字数:&nbsp;<span
-                        class="white-color">6k</span>
+                        class="white-color">9.1k</span>
             
             
             
